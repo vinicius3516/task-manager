@@ -1,9 +1,0 @@
-steps:
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args:
-    - '-c'
-    - |
-      chmod +x deploy.sh
-      ./deploy.sh
-timeout: 900s
