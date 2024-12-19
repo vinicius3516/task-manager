@@ -1,4 +1,5 @@
 import pymysql
+import os
 from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
@@ -105,5 +106,6 @@ def delete_task(task_id):
         return "Erro ao excluir tarefa."
 
 if __name__ == '__main__':
-    print("Iniciando servidor Flask...")
-    app.run(debug=True, port=5000)
+    # Obtém a porta do ambiente (padrão para Cloud Run é 8080)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
