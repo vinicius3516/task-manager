@@ -6,7 +6,7 @@ app = Flask(__name__)
 # Conexão com o banco de dados
 try:
     db = pymysql.connect(
-        host="34.57.252.118",  # IP público da instância Cloud SQL
+        host="35.232.189.37",  # IP público da instância Cloud SQL
         user="root",
         password="@Vinny629233",
         database="task_manager",
