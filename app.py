@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Configurações do banco de dados
 DB_HOST = "35.232.189.37"  # IP público da instância Cloud SQL
 DB_USER = "root"           # Usuário do MySQL
-DB_PASSWORD = "@Vinny629233"  # Senha do MySQL
+DB_PASSWORD = "q~zO*F|5{B$YrAIc"  # Senha do MySQL
 DB_NAME = "task_manager"   # Nome do banco de dados
 DB_PORT = 3306             # Porta padrão do MySQL
 
