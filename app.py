@@ -52,11 +52,11 @@ initialize_database()
 # Conexão com o banco de dados
 try:
     db = pymysql.connect(
-        host=DB_HOST,
+        host="localhost",  # Cloud SQL Connections usa localhost
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
-        port=DB_PORT
+        port=int(DB_PORT)
     )
     print("Conexão com o banco foi bem-sucedida!")
 except pymysql.MySQLError as err:
