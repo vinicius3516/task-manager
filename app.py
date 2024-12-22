@@ -52,7 +52,7 @@ initialize_database()
 # Conexão com o banco de dados
 try:
     db = pymysql.connect(
-        host=DB_HOST,  # Cloud SQL Connections usa localhost
+        host=localhost,  # Cloud SQL Connections usa localhost
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
