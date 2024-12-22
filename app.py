@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
 # Configurações do banco de dados
-DB_HOST = 104.198.7.70
+DB_HOST = "104.198.7.70"
 DB_USER = "root"           # Usuário do MySQL
 DB_PASSWORD = "r2Q9je4eYg"  # Senha do MySQL
 DB_NAME = "task_manager"   # Nome do banco de dados
