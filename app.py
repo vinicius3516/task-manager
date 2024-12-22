@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Configurações do banco de dados
 DB_HOST = "104.198.7.70"
 DB_USER = "user1"           # Usuário do MySQL
-DB_PASSWORD = "}:s<LT:I"]L"UzEi"  # Senha do MySQL
+DB_PASSWORD = "}s<LTI]LUzEi"  # Senha do MySQL
 DB_NAME = "task_manager"   # Nome do banco de dados
 DB_PORT = 3306             # Porta padrão do MySQL
 
