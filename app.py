@@ -5,9 +5,9 @@ from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
 # Configurações do banco de dados
-DB_HOST = "104.198.7.70"
-DB_USER = "user1"           # Usuário do MySQL
-DB_PASSWORD = "}s<LTI]LUzEi"  # Senha do MySQL
+DB_HOST = "34.66.44.184"
+DB_USER = "root"           # Usuário do MySQL
+DB_PASSWORD = "Vo2A66v32Q3Q48c"  # Senha do MySQL
 DB_NAME = "task_manager"   # Nome do banco de dados
 DB_PORT = 3306             # Porta padrão do MySQL
 
@@ -52,7 +52,7 @@ initialize_database()
 # Conexão com o banco de dados
 try:
     db = pymysql.connect(
-        host="localhost",  # Cloud SQL Connections usa localhost
+        host=DB_HOST,  # Cloud SQL Connections usa localhost
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
