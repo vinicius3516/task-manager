@@ -29,4 +29,5 @@ COPY . /app
 EXPOSE 8080
 
 # Etapa 9: Comando de inicialização
-["python", "app.py"]
+CMD ["python", "app.py"]
+
