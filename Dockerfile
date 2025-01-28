@@ -29,4 +29,4 @@ COPY . /app
 EXPOSE 8080
 
 # Etapa 9: Comando de inicialização
-CMD ["flask", "run"]
+["python", "app.py"]

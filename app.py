@@ -106,6 +106,7 @@ def delete_task(task_id):
         return "Erro ao excluir tarefa."
 
 if __name__ == '__main__':
-    # Obtém a porta do ambiente (padrão para Cloud Run é 8080)
     port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+    print(f"Executando na porta {port}")  # Apenas para debug
+    app.run(host='0.0.0.0', port=port, debug=False)
+
