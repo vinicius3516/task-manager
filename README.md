@@ -36,15 +36,15 @@ Testes e validação da aplicação localmente.
 
 ### 2. Construção da Imagem Docker
 
-#Criar imagem Docker
+#### Criar imagem Docker
 docker build -t gcr.io/<meu-projeto>/gerenciador-tarefas:latest .
 
 ### 3. Envio para o Artifact Registry
 
-#Autenticação no GCP
+#### Autenticação no GCP
 gcloud auth configure-docker
 
-#Enviar imagem para o Artifact Registry
+#### Enviar imagem para o Artifact Registry
 docker push gcr.io/<meu-projeto>/gerenciador-tarefas:latest
 
 ### 4. Deploy no Cloud Run
