@@ -1,4 +1,4 @@
-# Gerenciador de Tarefas - Arquitetura Baseada em Cloud Run
+# Task Manager - Arquitetura Baseada em Cloud Run
 
 # Visão Geral
 
