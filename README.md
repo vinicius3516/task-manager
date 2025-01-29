@@ -28,7 +28,7 @@ Deploy no Cloud Run: A aplicação foi implantada no Cloud Run, um serviço serv
 
 # Fluxo de Implementação
 
-# 1. Construção e Testes Locais
+### 1. Construção e Testes Locais
 
 Desenvolvimento em Python e conexão com Cloud SQL.
 
@@ -36,7 +36,7 @@ Testes e validação da aplicação localmente.
 
 # 2. Construção da Imagem Docker
 
-# Criar imagem Docker
+#Criar imagem Docker
 docker build -t gcr.io/<meu-projeto>/gerenciador-tarefas:latest .
 
 # 3. Envio para o Artifact Registry
