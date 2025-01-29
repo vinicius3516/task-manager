@@ -49,7 +49,7 @@ docker push gcr.io/<meu-projeto>/gerenciador-tarefas:latest
 
 ### 4. Deploy no Cloud Run
 
-# Implantar aplicação no Cloud Run
+#### Implantar aplicação no Cloud Run
  gcloud run deploy gerenciador-tarefas \
     --image=gcr.io/<meu-projeto>/gerenciador-tarefas:latest \
     --platform=managed \
