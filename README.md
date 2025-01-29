@@ -34,12 +34,12 @@ Desenvolvimento em Python e conexão com Cloud SQL.
 
 Testes e validação da aplicação localmente.
 
-# 2. Construção da Imagem Docker
+### 2. Construção da Imagem Docker
 
 #Criar imagem Docker
 docker build -t gcr.io/<meu-projeto>/gerenciador-tarefas:latest .
 
-# 3. Envio para o Artifact Registry
+### 3. Envio para o Artifact Registry
 
 #Autenticação no GCP
 gcloud auth configure-docker
@@ -47,7 +47,7 @@ gcloud auth configure-docker
 #Enviar imagem para o Artifact Registry
 docker push gcr.io/<meu-projeto>/gerenciador-tarefas:latest
 
-# 4. Deploy no Cloud Run
+### 4. Deploy no Cloud Run
 
 # Implantar aplicação no Cloud Run
  gcloud run deploy gerenciador-tarefas \
