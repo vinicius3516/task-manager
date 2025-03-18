@@ -5,11 +5,11 @@ from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 
 # Configurações do banco de dados
-DB_HOST = "34.66.44.184"
-DB_USER = "root"           # Usuário do MySQL
-DB_PASSWORD = "Vo2A66v32Q3Q48c"  # Senha do MySQL
-DB_NAME = "task_manager"   # Nome do banco de dados
-DB_PORT = 3306             # Porta padrão do MySQL
+DB_HOST = os.getenv('DB_HOST')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_NAME = os.getenv('DB_NAME')
+DB_PORT = int(os.getenv('DB_PORT', 3306))
 
 # Função para criar banco de dados e tabela, caso não existam
 def initialize_database():
@@ -56,7 +56,7 @@ try:
         user=DB_USER,
         password=DB_PASSWORD,
         database=DB_NAME,
-        port=int(DB_PORT)
+        port=DB_PORT
     )
     print("Conexão com o banco foi bem-sucedida!")
 except pymysql.MySQLError as err:
