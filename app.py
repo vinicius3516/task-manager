@@ -1,5 +1,6 @@
 import pymysql
 import os
+import time
 from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
@@ -11,26 +12,36 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_NAME = os.getenv('DB_NAME')
 DB_PORT = int(os.getenv('DB_PORT', 3306))
 
-# Função para criar banco de dados e tabela, caso não existam
-def initialize_database():
-    try:
-        # Conecta ao MySQL sem especificar o banco de dados
-        connection = pymysql.connect(
-            host=DB_HOST,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            port=DB_PORT
-        )
-        cursor = connection.cursor()
+# Conecta ao banco com tentativas
+def connect_with_retry(retries=10, delay=3):
+    for i in range(retries):
+        try:
+            connection = pymysql.connect(
+                host=DB_HOST,
+                user=DB_USER,
+                password=DB_PASSWORD,
+                port=DB_PORT
+            )
+            print("Conexão com o banco foi bem-sucedida (fase de criação)!")
+            return connection
+        except pymysql.MySQLError as err:
+            print(f"Tentativa {i+1}/{retries} - Erro ao conectar ao banco (fase de criação): {err}")
+            time.sleep(delay)
+    return None
 
-        # Cria o banco de dados, se não existir
+# Inicializa o banco de dados (cria se não existir)
+def initialize_database():
+    connection = connect_with_retry()
+    if not connection:
+        print("Não foi possível conectar ao banco para inicialização.")
+        return
+
+    try:
+        cursor = connection.cursor()
         cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME}")
         print(f"Banco de dados '{DB_NAME}' verificado/criado com sucesso.")
-
-        # Conecta ao banco de dados recém-criado
         connection.select_db(DB_NAME)
 
-        # Cria a tabela `tasks`, se não existir
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS tasks (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -42,28 +53,35 @@ def initialize_database():
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
         """)
         print("Tabela 'tasks' verificada/criada com sucesso.")
-        connection.close()
     except pymysql.MySQLError as err:
         print(f"Erro ao inicializar o banco de dados: {err}")
+    finally:
+        connection.close()
 
-# Inicializa o banco de dados
+# Inicializa banco
 initialize_database()
 
-# Conexão com o banco de dados
-try:
-    db = pymysql.connect(
-        host=DB_HOST,  # Cloud SQL Connections usa localhost
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME,
-        port=DB_PORT
-    )
-    print("Conexão com o banco foi bem-sucedida!")
-except pymysql.MySQLError as err:
-    print(f"Erro ao conectar ao banco: {err}")
-    db = None
+# Tenta conectar ao banco (de novo, agora com o DB_NAME)
+def connect_app_db(retries=10, delay=3):
+    for i in range(retries):
+        try:
+            conn = pymysql.connect(
+                host=DB_HOST,
+                user=DB_USER,
+                password=DB_PASSWORD,
+                database=DB_NAME,
+                port=DB_PORT
+            )
+            print("Conexão com o banco foi bem-sucedida!")
+            return conn
+        except pymysql.MySQLError as err:
+            print(f"Tentativa {i+1}/{retries} - Erro ao conectar ao banco: {err}")
+            time.sleep(delay)
+    return None
 
-# Rota para exibir as tarefas
+db = connect_app_db()
+
+# Rota principal
 @app.route('/')
 def index():
     if db is None:
@@ -77,7 +95,7 @@ def index():
         print(f"Erro ao buscar tarefas: {e}")
         return "Erro ao buscar tarefas no banco de dados."
 
-# Rota para adicionar uma tarefa
+# Adiciona tarefa
 @app.route('/add', methods=['POST'])
 def add_task():
     title = request.form['title']
@@ -85,7 +103,7 @@ def add_task():
     due_date = request.form['due_date']
     try:
         cursor = db.cursor()
-        cursor.execute("INSERT INTO tasks (title, description, due_date) VALUES (%s, %s, %s)", 
+        cursor.execute("INSERT INTO tasks (title, description, due_date) VALUES (%s, %s, %s)",
                        (title, description, due_date))
         db.commit()
         return redirect('/')
@@ -93,7 +111,7 @@ def add_task():
         print(f"Erro ao adicionar tarefa: {e}")
         return "Erro ao adicionar tarefa."
 
-# Rota para excluir uma tarefa
+# Exclui tarefa
 @app.route('/delete/<int:task_id>')
 def delete_task(task_id):
     try:
@@ -105,8 +123,8 @@ def delete_task(task_id):
         print(f"Erro ao excluir tarefa: {e}")
         return "Erro ao excluir tarefa."
 
+# Inicializa app Flask
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
-    print(f"Executando na porta {port}")  # Apenas para debug
+    print(f"Executando na porta {port}")
     app.run(host='0.0.0.0', port=port, debug=False)
-

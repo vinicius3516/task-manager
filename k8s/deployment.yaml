@@ -27,6 +27,11 @@ spec:
               secretKeyRef:
                 name: task-secret
                 key: MYSQL_DATABASE
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 10
+          periodSeconds: 5
 
 ---
 
@@ -38,8 +43,8 @@ spec:
   selector:
     app: mysql
   ports:
-  - port:  3306
-    targetPort:  3306
+  - port: 3306
+    targetPort: 3306
 
 ---
 
@@ -56,6 +61,10 @@ spec:
       labels:
         app: app-task
     spec:
+      initContainers:
+      - name: wait-for-mysql
+        image: busybox
+        command: ['sh', '-c', 'until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;']
       containers:
       - name: app-task
         image: vinny6202/task-manager:v3
@@ -64,23 +73,46 @@ spec:
         envFrom:
           - secretRef:
               name: task-secret
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name:  app-task
+  name: app-task
 spec:
   selector:
-    app:  app-task
-  type: NodePort
+    app: app-task
+  type: LoadBalancer
   ports:
   - name: http
-    port:  80
-    targetPort:  8080
-    nodePort: 30000
+    port: 80
+    targetPort: 8080
 
+---
 
-
-    
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: task-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: app-task
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
